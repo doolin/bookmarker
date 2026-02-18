@@ -1,0 +1,8 @@
+/.bundle/
+/coverage/
+/pkg/
+/tmp/
+*.gem
+Gemfile.lock
+.ruby-lsp/
+.claude/
