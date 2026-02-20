@@ -167,8 +167,8 @@ RSpec.describe Bookmarker::Database do
   context 'with nil date_added' do
     it 'handles nil timestamps' do
       dir2, db_path2 = create_test_database(bookmarks: [
-        { title: 'No Date', url: 'https://example.com/nodate', parent: 2, date_added: nil }
-      ])
+                                              { title: 'No Date', url: 'https://example.com/nodate', parent: 2, date_added: nil }
+                                            ])
       db = described_class.new(db_path2)
       bm = db.bookmarks.first
       expect(bm.date_added).to be_nil
@@ -180,8 +180,8 @@ RSpec.describe Bookmarker::Database do
   context 'with nil title and folder' do
     it 'search handles bookmarks with nil title' do
       dir2, db_path2 = create_test_database(bookmarks: [
-        { title: nil, url: 'https://example.com/notitle', parent: 2 }
-      ])
+                                              { title: nil, url: 'https://example.com/notitle', parent: 2 }
+                                            ])
       db = described_class.new(db_path2)
       results = db.search('example.com')
       expect(results.size).to eq(1)
@@ -192,8 +192,8 @@ RSpec.describe Bookmarker::Database do
 
     it 'search handles bookmarks with nil folder gracefully' do
       dir2, db_path2 = create_test_database(bookmarks: [
-        { title: 'Orphan', url: 'https://example.com/orphan', parent: 999 }
-      ])
+                                              { title: 'Orphan', url: 'https://example.com/orphan', parent: 999 }
+                                            ])
       db = described_class.new(db_path2)
       results = db.search('orphan')
       expect(results.size).to eq(1)
@@ -203,8 +203,8 @@ RSpec.describe Bookmarker::Database do
 
     it 'search with nil folder does not raise when term matches nothing' do
       dir2, db_path2 = create_test_database(bookmarks: [
-        { title: 'Orphan', url: 'https://example.com/orphan', parent: 999 }
-      ])
+                                              { title: 'Orphan', url: 'https://example.com/orphan', parent: 999 }
+                                            ])
       db = described_class.new(db_path2)
       results = db.search('nonexistent_folder')
       expect(results).to be_empty
@@ -214,8 +214,8 @@ RSpec.describe Bookmarker::Database do
 
     it 'by_folder handles bookmarks with nil path' do
       dir2, db_path2 = create_test_database(bookmarks: [
-        { title: 'Orphan', url: 'https://example.com/orphan', parent: 999 }
-      ])
+                                              { title: 'Orphan', url: 'https://example.com/orphan', parent: 999 }
+                                            ])
       db = described_class.new(db_path2)
       results = db.by_folder('menu')
       expect(results).to be_empty
