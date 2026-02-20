@@ -131,7 +131,7 @@ module Bookmarker
       parts << '[n]ext' if next_page?
       parts << '[p]rev' if prev_page?
       parts << '[q]uit'
-      "#{parts.join(" | ")} > "
+      "#{parts.join(' | ')} > "
     end
 
     def process_input(input, output)

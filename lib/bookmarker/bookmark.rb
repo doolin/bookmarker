@@ -16,7 +16,7 @@ module Bookmarker
   Bookmark = Data.define(:id, :title, :url, :folder, :path, :date_added) do
     # @return [String] title and URL on two lines, suitable for plain output
     def to_s
-      "#{title || "(untitled)"}\n  #{url}"
+      "#{title || '(untitled)'}\n  #{url}"
     end
 
     # @param index [Integer] display position number
