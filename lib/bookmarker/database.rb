@@ -80,7 +80,7 @@ module Bookmarker
     def search(term)
       pattern = term.downcase
       bookmarks.select do |bm|
-        (bm.title&.downcase&.include?(pattern)) ||
+        bm.title&.downcase&.include?(pattern) ||
           bm.url.downcase.include?(pattern) ||
           bm.full_path.downcase.include?(pattern)
       end
@@ -99,7 +99,7 @@ module Bookmarker
     def by_folder(folder_name)
       bookmarks.select do |bm|
         bm.folder == folder_name ||
-          (bm.path&.include?(folder_name))
+          bm.path&.include?(folder_name)
       end
     end
 
