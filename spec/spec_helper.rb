@@ -72,7 +72,7 @@ module TestHelpers
         'INSERT INTO moz_places (id, url, title) VALUES (?, ?, ?)',
         [place_id, bm[:url], bm[:title]]
       )
-      date = bm.key?(:date_added) ? bm[:date_added] : (1_700_000_000_000_000 - i * 1_000_000)
+      date = bm.key?(:date_added) ? bm[:date_added] : (1_700_000_000_000_000 - (i * 1_000_000))
       db.execute(
         'INSERT INTO moz_bookmarks (id, type, fk, parent, position, title, dateAdded) VALUES (?, 1, ?, ?, ?, ?, ?)',
         [bookmark_id, place_id, bm[:parent] || 2, i, bm[:title], date]

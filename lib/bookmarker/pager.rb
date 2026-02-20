@@ -87,7 +87,7 @@ module Bookmarker
     def page_status
       return 'No items' if items.empty?
 
-      first = current_page * page_size + 1
+      first = (current_page * page_size) + 1
       last = [first + page_size - 1, items.size].min
       "Showing #{first}-#{last} of #{items.size} (page #{current_page + 1}/#{total_pages})"
     end
