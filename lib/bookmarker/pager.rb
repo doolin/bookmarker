@@ -70,14 +70,14 @@ module Bookmarker
 
     # @return [Boolean] true if there is a previous page
     def prev_page?
-      current_page > 0
+      current_page.positive?
     end
 
     # Jump to a specific page.
     # @param page_number [Integer] zero-based page index
     # @return [Boolean] true if the page was valid and set
     def go_to(page_number)
-      return false if page_number < 0 || page_number >= total_pages
+      return false if page_number.negative? || page_number >= total_pages
 
       @current_page = page_number
       true
