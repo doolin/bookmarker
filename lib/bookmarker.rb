@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'bookmarker/version'
+require_relative 'bookmarker/color'
 require_relative 'bookmarker/bookmark'
 require_relative 'bookmarker/profile_finder'
 require_relative 'bookmarker/database'

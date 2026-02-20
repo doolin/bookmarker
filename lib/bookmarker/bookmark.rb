@@ -23,9 +23,9 @@ module Bookmarker
     # @return [String] numbered title, path, and indented URL for paged output
     def formatted(index)
       display_title = title || '(untitled)'
-      lines = ["#{index}. #{display_title}"]
-      lines << "   [#{full_path}]" if path && path.size > 1
-      lines << "   #{url}"
+      lines = ["#{Color.wrap(index.to_s, :dim)}. #{Color.wrap(display_title, :bold)}"]
+      lines << "   [#{Color.wrap(full_path, :path)}]" if path && path.size > 1
+      lines << "   #{Color.wrap(url, :url)}"
       lines.join("\n")
     end
 

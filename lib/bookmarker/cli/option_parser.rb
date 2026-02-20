@@ -48,6 +48,7 @@ module Bookmarker
           opts.on('--profiles', 'List available Firefox profiles with databases') { options[:list_profiles] = true }
           opts.on('-c', '--count', 'Show total bookmark count and exit') { options[:count] = true }
           opts.on('-v', '--version', 'Show version') { options[:version] = true }
+          opts.on('--no-color', 'Disable colored output') { options[:no_color] = true }
           opts.on('-h', '--help', 'Show this help') { options[:help] = true }
         end
       end

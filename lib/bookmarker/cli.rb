@@ -39,6 +39,8 @@ module Bookmarker
     # @return [Integer] 0 on success, 1 on error
     def run
       @options = @option_parser.parse!(argv)
+      Color.auto_detect(stdout)
+      Color.enabled = false if @options[:no_color]
       execute
       0
     rescue Error => e

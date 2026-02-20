@@ -91,7 +91,7 @@ module Bookmarker
 
       first = (current_page * page_size) + 1
       last = [first + page_size - 1, items.size].min
-      "Showing #{first}-#{last} of #{items.size} (page #{current_page + 1}/#{total_pages})"
+      Color.wrap("Showing #{first}-#{last} of #{items.size} (page #{current_page + 1}/#{total_pages})", :dim)
     end
 
     # Render the current page to an output stream.
@@ -131,9 +131,9 @@ module Bookmarker
 
     def navigation_prompt
       parts = []
-      parts << '[n]ext' if next_page?
-      parts << '[p]rev' if prev_page?
-      parts << '[q]uit'
+      parts << "[#{Color.wrap('n', :key, :bold)}]ext" if next_page?
+      parts << "[#{Color.wrap('p', :key, :bold)}]rev" if prev_page?
+      parts << "[#{Color.wrap('q', :key, :bold)}]uit"
       "#{parts.join(' | ')} > "
     end
 
