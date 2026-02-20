@@ -108,7 +108,7 @@ RSpec.describe Bookmarker::Database do
   describe '#folders' do
     it 'returns sorted unique folder names' do
       db = described_class.new(db_path)
-      expect(db.folders).to eq(['menu', 'toolbar'])
+      expect(db.folders).to eq(%w[menu toolbar])
     end
   end
 
@@ -156,7 +156,7 @@ RSpec.describe Bookmarker::Database do
       )
       db = described_class.new(db_path2)
       bm = db.bookmarks.first
-      expect(bm.path).to eq(['toolbar', 'ruby', 'gems'])
+      expect(bm.path).to eq(%w[toolbar ruby gems])
       expect(bm.folder).to eq('gems')
       expect(bm.full_path).to eq('toolbar > ruby > gems')
     ensure

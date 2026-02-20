@@ -5,7 +5,7 @@ RSpec.describe Bookmarker::Pager do
     (1..50).map do |i|
       Bookmarker::Bookmark.new(
         id: i, title: "Bookmark #{i}", url: "https://example.com/#{i}",
-        folder: 'test', path: ['menu', 'test'], date_added: Time.now
+        folder: 'test', path: %w[menu test], date_added: Time.now
       )
     end
   end
