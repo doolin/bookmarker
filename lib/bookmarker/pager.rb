@@ -140,22 +140,16 @@ module Bookmarker
 
       case line.strip.downcase
       when 'n', 'next'
-        unless next_page
-          output.puts 'Already on last page.'
-        end
+        output.puts 'Already on last page.' unless next_page
         true
       when 'p', 'prev'
-        unless prev_page
-          output.puts 'Already on first page.'
-        end
+        output.puts 'Already on first page.' unless prev_page
         true
       when 'q', 'quit', 'exit'
         false
       when /\A\d+\z/
         page_num = line.strip.to_i - 1
-        unless go_to(page_num)
-          output.puts "Invalid page number. Valid range: 1-#{total_pages}"
-        end
+        output.puts "Invalid page number. Valid range: 1-#{total_pages}" unless go_to(page_num)
         true
       else
         output.puts 'Unknown command. Use n/p/q or a page number.'
