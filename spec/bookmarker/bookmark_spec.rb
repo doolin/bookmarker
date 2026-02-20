@@ -7,7 +7,7 @@ RSpec.describe Bookmarker::Bookmark do
       title: 'Example Site',
       url: 'https://example.com',
       folder: 'toolbar',
-      path: ['menu', 'toolbar'],
+      path: %w[menu toolbar],
       date_added: Time.at(1_700_000_000)
     )
   end
@@ -45,7 +45,7 @@ RSpec.describe Bookmarker::Bookmark do
 
     it 'shows deep paths' do
       bm = described_class.new(id: 4, title: 'Deep', url: 'https://example.com',
-                               folder: 'gems', path: ['menu', 'toolbar', 'ruby', 'gems'],
+                               folder: 'gems', path: %w[menu toolbar ruby gems],
                                date_added: nil)
       expect(bm.formatted(1)).to eq(
         "1. Deep\n   [menu > toolbar > ruby > gems]\n   https://example.com"
@@ -83,7 +83,7 @@ RSpec.describe Bookmarker::Bookmark do
       expect(bookmark.title).to eq('Example Site')
       expect(bookmark.url).to eq('https://example.com')
       expect(bookmark.folder).to eq('toolbar')
-      expect(bookmark.path).to eq(['menu', 'toolbar'])
+      expect(bookmark.path).to eq(%w[menu toolbar])
       expect(bookmark.date_added).to eq(Time.at(1_700_000_000))
     end
   end
