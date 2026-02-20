@@ -32,7 +32,6 @@ RSpec.describe Bookmarker::ProfileFinder do
 
     it 'finds places.sqlite files in profile directories' do
       dir, db_path = create_test_database(bookmarks: [])
-      profile_dir = File.dirname(db_path)
 
       # Create a fake profiles dir structure
       fake_profiles = File.join(dir, 'Profiles')
