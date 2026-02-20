@@ -39,7 +39,7 @@ module Bookmarker
       dir = profiles_dir
       return [] unless Dir.exist?(dir)
 
-      Dir.glob(File.join(dir, '*', DB_NAME)).sort
+      Dir.glob(File.join(dir, '*', DB_NAME))
     end
 
     # Returns the most likely default database, preferring the
