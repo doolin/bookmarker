@@ -170,7 +170,7 @@ RSpec.describe Bookmarker::Pager do
   describe '#interactive' do
     it 'displays page and processes quit' do
       pager = described_class.new(bookmarks, page_size: 2)
-      input = StringIO.new("q\n")
+      input = StringIO.new('q')
       output = StringIO.new
       pager.interactive(input: input, output: output)
       expect(output.string).to include('1. Bookmark 1')
@@ -180,7 +180,7 @@ RSpec.describe Bookmarker::Pager do
 
     it 'navigates forward and back' do
       pager = described_class.new(bookmarks, page_size: 2)
-      input = StringIO.new("n\np\nq\n")
+      input = StringIO.new('npq')
       output = StringIO.new
       pager.interactive(input: input, output: output)
       text = output.string
@@ -190,15 +190,29 @@ RSpec.describe Bookmarker::Pager do
 
     it 'handles page number input' do
       pager = described_class.new(bookmarks, page_size: 25)
-      input = StringIO.new("2\nq\n")
+      input = StringIO.new("2\nq")
       output = StringIO.new
       pager.interactive(input: input, output: output)
       expect(output.string).to include('Bookmark 26')
     end
 
+    it 'handles multi-digit page number' do
+      bookmarks_large = (1..300).map do |i|
+        Bookmarker::Bookmark.new(
+          id: i, title: "Bookmark #{i}", url: "https://example.com/#{i}",
+          folder: 'test', path: %w[menu test], date_added: Time.now
+        )
+      end
+      pager = described_class.new(bookmarks_large, page_size: 25)
+      input = StringIO.new("12\nq")
+      output = StringIO.new
+      pager.interactive(input: input, output: output)
+      expect(output.string).to include('Bookmark 276')
+    end
+
     it 'handles invalid page number' do
       pager = described_class.new(bookmarks, page_size: 25)
-      input = StringIO.new("99\nq\n")
+      input = StringIO.new("99\nq")
       output = StringIO.new
       pager.interactive(input: input, output: output)
       expect(output.string).to include('Invalid page number')
@@ -206,7 +220,7 @@ RSpec.describe Bookmarker::Pager do
 
     it 'handles unknown commands' do
       pager = described_class.new(bookmarks, page_size: 25)
-      input = StringIO.new("xyz\nq\n")
+      input = StringIO.new('xq')
       output = StringIO.new
       pager.interactive(input: input, output: output)
       expect(output.string).to include('Unknown command')
@@ -222,7 +236,7 @@ RSpec.describe Bookmarker::Pager do
 
     it "shows 'already on last page' message" do
       pager = described_class.new(bookmarks, page_size: 25)
-      input = StringIO.new("n\nn\nq\n")
+      input = StringIO.new('nnq')
       output = StringIO.new
       pager.interactive(input: input, output: output)
       expect(output.string).to include('Already on last page')
@@ -230,28 +244,10 @@ RSpec.describe Bookmarker::Pager do
 
     it "shows 'already on first page' message" do
       pager = described_class.new(bookmarks, page_size: 25)
-      input = StringIO.new("p\nq\n")
+      input = StringIO.new('pq')
       output = StringIO.new
       pager.interactive(input: input, output: output)
       expect(output.string).to include('Already on first page')
-    end
-
-    it "accepts 'next' and 'prev' as full words" do
-      pager = described_class.new(bookmarks, page_size: 2)
-      input = StringIO.new("next\nprev\nquit\n")
-      output = StringIO.new
-      pager.interactive(input: input, output: output)
-      text = output.string
-      expect(text).to include('Bookmark 3') # page 2
-      expect(text).to include('page 1/') # back to page 1
-    end
-
-    it "accepts 'exit' command" do
-      pager = described_class.new(bookmarks, page_size: 25)
-      input = StringIO.new("exit\n")
-      output = StringIO.new
-      pager.interactive(input: input, output: output)
-      expect(output.string).to include('Bookmark 1')
     end
   end
 end

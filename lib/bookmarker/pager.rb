@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'io/console'
+
 module Bookmarker
   # Paginates an array of items for terminal display.
   #
@@ -109,9 +111,10 @@ module Bookmarker
       output.puts page_status
     end
 
-    # Run an interactive pagination loop reading commands from input.
+    # Run an interactive pagination loop reading single keypresses.
     #
-    # Commands: n/next, p/prev, q/quit/exit, or a page number (1-based).
+    # Commands: n (next), p (prev), q (quit) act instantly.
+    # Page numbers (1-based) accumulate digits until Enter.
     #
     # @param input [IO] input stream (default $stdin)
     # @param output [IO] output stream (default $stdout)
@@ -134,27 +137,53 @@ module Bookmarker
       "#{parts.join(' | ')} > "
     end
 
-    def process_input(input, output)
-      line = input.gets
-      return false if line.nil?
+    def read_char(input)
+      if input.respond_to?(:getch)
+        input.getch
+      else
+        input.getc
+      end
+    end
 
-      case line.strip.downcase
-      when 'n', 'next'
+    def process_input(input, output)
+      char = read_char(input)
+      return false if char.nil?
+
+      case char.downcase
+      when 'n'
+        output.puts
         output.puts 'Already on last page.' unless advance?
         true
-      when 'p', 'prev'
+      when 'p'
+        output.puts
         output.puts 'Already on first page.' unless go_back?
         true
-      when 'q', 'quit', 'exit'
+      when 'q'
+        output.puts
         false
-      when /\A\d+\z/
-        page_num = line.strip.to_i - 1
-        output.puts "Invalid page number. Valid range: 1-#{total_pages}" unless go_to?(page_num)
-        true
+      when /\d/
+        handle_page_number(char, input, output)
       else
+        output.puts
         output.puts 'Unknown command. Use n/p/q or a page number.'
         true
       end
+    end
+
+    def handle_page_number(first_digit, input, output)
+      output.print first_digit
+      digits = first_digit
+      loop do
+        c = read_char(input)
+        break unless c&.match?(/\d/)
+
+        digits << c
+        output.print c
+      end
+      output.puts
+      page_num = digits.to_i - 1
+      output.puts "Invalid page number. Valid range: 1-#{total_pages}" unless go_to?(page_num)
+      true
     end
   end
 end
