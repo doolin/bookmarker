@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
                      'and presents them in a paginated terminal interface.'
   spec.homepage = 'https://github.com/daviddoolin/bookmarker'
   spec.license = 'MIT'
-  spec.required_ruby_version = '>= 3.1.0'
+  spec.required_ruby_version = '>= 3.2.0'
 
   spec.files = Dir['lib/**/*.rb', 'exe/*', 'LICENSE', 'README.md']
   spec.bindir = 'exe'
