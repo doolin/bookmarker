@@ -1,0 +1,11 @@
+inherit_from: .rubocop_todo.yml
+
+plugins:
+  - rubocop-packaging
+  - rubocop-performance
+  - rubocop-rake
+  - rubocop-rspec
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.2
