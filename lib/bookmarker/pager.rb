@@ -3,13 +3,13 @@
 module Bookmarker
   # Paginates an array of items for terminal display.
   #
-  # Provides both a programmatic API (next_page, prev_page, go_to)
+  # Provides both a programmatic API (advance?, go_back?, go_to?)
   # and a full interactive loop with keyboard navigation.
   #
   # @example Programmatic
   #   pager = Pager.new(bookmarks, page_size: 10)
   #   pager.render                # print page 1
-  #   pager.next_page             # advance
+  #   pager.advance?              # move to page 2
   #   pager.render                # print page 2
   #
   # @example Interactive
@@ -47,7 +47,7 @@ module Bookmarker
 
     # Advance to the next page.
     # @return [Boolean] true if the page changed, false if already on last page
-    def next_page
+    def advance?
       return false unless next_page?
 
       @current_page += 1
@@ -56,7 +56,7 @@ module Bookmarker
 
     # Go back to the previous page.
     # @return [Boolean] true if the page changed, false if already on first page
-    def prev_page
+    def go_back?
       return false unless prev_page?
 
       @current_page -= 1
@@ -76,7 +76,7 @@ module Bookmarker
     # Jump to a specific page.
     # @param page_number [Integer] zero-based page index
     # @return [Boolean] true if the page was valid and set
-    def go_to(page_number)
+    def go_to?(page_number)
       return false if page_number.negative? || page_number >= total_pages
 
       @current_page = page_number
@@ -140,16 +140,16 @@ module Bookmarker
 
       case line.strip.downcase
       when 'n', 'next'
-        output.puts 'Already on last page.' unless next_page
+        output.puts 'Already on last page.' unless advance?
         true
       when 'p', 'prev'
-        output.puts 'Already on first page.' unless prev_page
+        output.puts 'Already on first page.' unless go_back?
         true
       when 'q', 'quit', 'exit'
         false
       when /\A\d+\z/
         page_num = line.strip.to_i - 1
-        output.puts "Invalid page number. Valid range: 1-#{total_pages}" unless go_to(page_num)
+        output.puts "Invalid page number. Valid range: 1-#{total_pages}" unless go_to?(page_num)
         true
       else
         output.puts 'Unknown command. Use n/p/q or a page number.'

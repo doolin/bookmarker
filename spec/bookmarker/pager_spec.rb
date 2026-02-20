@@ -59,33 +59,33 @@ RSpec.describe Bookmarker::Pager do
     end
   end
 
-  describe '#next_page' do
+  describe '#advance?' do
     it 'advances to the next page' do
       pager = described_class.new(bookmarks)
-      expect(pager.next_page).to be true
+      expect(pager.advance?).to be true
       expect(pager.current_page).to eq(1)
       expect(pager.current_items.first.title).to eq('Bookmark 26')
     end
 
     it 'returns false on last page' do
       pager = described_class.new(bookmarks)
-      pager.next_page
-      expect(pager.next_page).to be false
+      pager.advance?
+      expect(pager.advance?).to be false
       expect(pager.current_page).to eq(1)
     end
   end
 
-  describe '#prev_page' do
+  describe '#go_back?' do
     it 'goes back to previous page' do
       pager = described_class.new(bookmarks)
-      pager.next_page
-      expect(pager.prev_page).to be true
+      pager.advance?
+      expect(pager.go_back?).to be true
       expect(pager.current_page).to eq(0)
     end
 
     it 'returns false on first page' do
       pager = described_class.new(bookmarks)
-      expect(pager.prev_page).to be false
+      expect(pager.go_back?).to be false
     end
   end
 
@@ -97,7 +97,7 @@ RSpec.describe Bookmarker::Pager do
 
     it 'returns false on last page' do
       pager = described_class.new(bookmarks)
-      pager.next_page
+      pager.advance?
       expect(pager.next_page?).to be false
     end
   end
@@ -110,22 +110,22 @@ RSpec.describe Bookmarker::Pager do
 
     it 'returns true after advancing' do
       pager = described_class.new(bookmarks)
-      pager.next_page
+      pager.advance?
       expect(pager.prev_page?).to be true
     end
   end
 
-  describe '#go_to' do
+  describe '#go_to?' do
     it 'jumps to a specific page' do
       pager = described_class.new(bookmarks)
-      expect(pager.go_to(1)).to be true
+      expect(pager.go_to?(1)).to be true
       expect(pager.current_page).to eq(1)
     end
 
     it 'returns false for invalid page numbers' do
       pager = described_class.new(bookmarks)
-      expect(pager.go_to(-1)).to be false
-      expect(pager.go_to(5)).to be false
+      expect(pager.go_to?(-1)).to be false
+      expect(pager.go_to?(5)).to be false
     end
   end
 
@@ -137,7 +137,7 @@ RSpec.describe Bookmarker::Pager do
 
     it 'shows correct status for last page with partial items' do
       pager = described_class.new(bookmarks)
-      pager.next_page
+      pager.advance?
       expect(pager.page_status).to eq('Showing 26-50 of 50 (page 2/2)')
     end
 
