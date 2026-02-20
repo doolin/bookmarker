@@ -12,7 +12,7 @@ require "tmpdir"
 require "fileutils"
 
 module TestHelpers
-  def create_test_database(bookmarks: default_bookmarks)
+  def create_test_database(bookmarks: default_bookmarks, extra_folders: [])
     dir = Dir.mktmpdir("bookmarker_test")
     db_path = File.join(dir, "places.sqlite")
     db = SQLite3::Database.new(db_path)
@@ -57,9 +57,17 @@ module TestHelpers
     db.execute "INSERT INTO moz_bookmarks (id, type, parent, position, title) VALUES (2, 2, 1, 0, 'menu')"
     db.execute "INSERT INTO moz_bookmarks (id, type, parent, position, title) VALUES (3, 2, 1, 1, 'toolbar')"
 
+    # Insert any extra folders (for testing nested paths)
+    extra_folders.each do |folder|
+      db.execute(
+        "INSERT INTO moz_bookmarks (id, type, parent, position, title) VALUES (?, 2, ?, ?, ?)",
+        [folder[:id], folder[:parent], folder[:position] || 0, folder[:title]]
+      )
+    end
+
     bookmarks.each_with_index do |bm, i|
       place_id = i + 1
-      bookmark_id = i + 10
+      bookmark_id = i + 100
       db.execute(
         "INSERT INTO moz_places (id, url, title) VALUES (?, ?, ?)",
         [place_id, bm[:url], bm[:title]]

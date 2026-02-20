@@ -26,12 +26,13 @@ RSpec.describe Bookmarker::Database do
       expect(results).to all(be_a(Bookmarker::Bookmark))
     end
 
-    it "extracts title, url, folder, and date from the database" do
+    it "extracts title, url, folder, path, and date from the database" do
       db = described_class.new(db_path)
       bm = db.bookmarks.find { |b| b.title == "Bookmark 1" }
       expect(bm).not_to be_nil
       expect(bm.url).to eq("https://example.com/1")
       expect(bm.folder).to eq("menu")
+      expect(bm.path).to include("menu")
       expect(bm.date_added).to be_a(Time)
     end
 
@@ -43,8 +44,14 @@ RSpec.describe Bookmarker::Database do
       expect(menu_bms.size).to eq(15)
     end
 
+    it "builds path from top-level folder to parent" do
+      db = described_class.new(db_path)
+      bm = db.bookmarks.find { |b| b.title == "Bookmark 1" }
+      # root is excluded (synthetic node), path starts at first real folder
+      expect(bm.path).to eq(["menu"])
+    end
+
     it "excludes place: URLs" do
-      # The default test data has no place: URLs, so all should be present
       db = described_class.new(db_path)
       place_urls = db.bookmarks.select { |b| b.url.start_with?("place:") }
       expect(place_urls).to be_empty
@@ -80,7 +87,7 @@ RSpec.describe Bookmarker::Database do
       expect(results.first.url).to eq("https://example.com/5")
     end
 
-    it "finds bookmarks by folder" do
+    it "finds bookmarks by folder path" do
       db = described_class.new(db_path)
       results = db.search("toolbar")
       expect(results.size).to eq(15)
@@ -117,6 +124,44 @@ RSpec.describe Bookmarker::Database do
       db = described_class.new(db_path)
       expect(db.by_folder("nonexistent")).to be_empty
     end
+
+    it "matches folder at any level of the path" do
+      dir2, db_path2 = create_test_database(
+        extra_folders: [
+          { id: 4, parent: 3, title: "subfolder" }
+        ],
+        bookmarks: [
+          { title: "Deep BM", url: "https://example.com/deep", parent: 4 }
+        ]
+      )
+      db = described_class.new(db_path2)
+      results = db.by_folder("toolbar")
+      expect(results.size).to eq(1)
+      expect(results.first.title).to eq("Deep BM")
+    ensure
+      cleanup_test_dir(dir2)
+    end
+  end
+
+  context "with nested folders" do
+    it "builds full path through multiple folder levels" do
+      dir2, db_path2 = create_test_database(
+        extra_folders: [
+          { id: 4, parent: 3, title: "ruby" },
+          { id: 5, parent: 4, title: "gems" }
+        ],
+        bookmarks: [
+          { title: "Deep Bookmark", url: "https://example.com/deep", parent: 5 }
+        ]
+      )
+      db = described_class.new(db_path2)
+      bm = db.bookmarks.first
+      expect(bm.path).to eq(["toolbar", "ruby", "gems"])
+      expect(bm.folder).to eq("gems")
+      expect(bm.full_path).to eq("toolbar > ruby > gems")
+    ensure
+      cleanup_test_dir(dir2)
+    end
   end
 
   context "with nil date_added" do
@@ -152,7 +197,6 @@ RSpec.describe Bookmarker::Database do
       db = described_class.new(db_path2)
       results = db.search("orphan")
       expect(results.size).to eq(1)
-      expect(results.first.folder).to be_nil
     ensure
       cleanup_test_dir(dir2)
     end
@@ -162,8 +206,18 @@ RSpec.describe Bookmarker::Database do
         { title: "Orphan", url: "https://example.com/orphan", parent: 999 }
       ])
       db = described_class.new(db_path2)
-      # Search for a folder name that won't match title or URL
       results = db.search("nonexistent_folder")
+      expect(results).to be_empty
+    ensure
+      cleanup_test_dir(dir2)
+    end
+
+    it "by_folder handles bookmarks with nil path" do
+      dir2, db_path2 = create_test_database(bookmarks: [
+        { title: "Orphan", url: "https://example.com/orphan", parent: 999 }
+      ])
+      db = described_class.new(db_path2)
+      results = db.by_folder("menu")
       expect(results).to be_empty
     ensure
       cleanup_test_dir(dir2)

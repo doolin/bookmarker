@@ -5,7 +5,7 @@ RSpec.describe Bookmarker::Pager do
     (1..50).map do |i|
       Bookmarker::Bookmark.new(
         id: i, title: "Bookmark #{i}", url: "https://example.com/#{i}",
-        folder: "test", date_added: Time.now
+        folder: "test", path: ["menu", "test"], date_added: Time.now
       )
     end
   end
@@ -217,7 +217,6 @@ RSpec.describe Bookmarker::Pager do
       input = StringIO.new("")
       output = StringIO.new
       pager.interactive(input: input, output: output)
-      # Should exit gracefully
       expect(output.string).to include("Bookmark 1")
     end
 
