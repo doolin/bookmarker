@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'optparse'
+require_relative 'cli/option_parser'
 
 module Bookmarker
   # Command-line interface for browsing Firefox bookmarks.
@@ -32,73 +32,25 @@ module Bookmarker
       @stdout = stdout
       @stderr = stderr
       @stdin = stdin
-      @options = {}
+      @option_parser = OptionParser.new
     end
 
     # Parse options, execute the requested action, and return an exit code.
     # @return [Integer] 0 on success, 1 on error
     def run
-      parse_options!
+      @options = @option_parser.parse!(argv)
       execute
       0
     rescue Error => e
       stderr.puts "Error: #{e.message}"
       1
-    rescue OptionParser::InvalidOption => e
+    rescue ::OptionParser::InvalidOption => e
       stderr.puts e.message
-      stderr.puts option_parser.to_s
+      stderr.puts @option_parser.help
       1
     end
 
     private
-
-    def parse_options!
-      option_parser.parse!(argv)
-    end
-
-    def option_parser
-      @option_parser ||= OptionParser.new do |opts|
-        opts.banner = 'Usage: bookmarker [options]'
-        opts.separator ''
-        opts.separator 'Options:'
-
-        opts.on('-d', '--database PATH', 'Path to places.sqlite') do |path|
-          @options[:database] = path
-        end
-
-        opts.on('-s', '--search TERM', 'Search bookmarks by title, URL, or folder') do |term|
-          @options[:search] = term
-        end
-
-        opts.on('-f', '--folder NAME', 'Show bookmarks in a specific folder') do |name|
-          @options[:folder] = name
-        end
-
-        opts.on('--folders', 'List all bookmark folders') do
-          @options[:list_folders] = true
-        end
-
-        opts.on('-n', '--per-page NUM', Integer, 'Bookmarks per page (default: 25)') do |n|
-          @options[:per_page] = n
-        end
-
-        opts.on('--profiles', 'List available Firefox profiles with databases') do
-          @options[:list_profiles] = true
-        end
-
-        opts.on('-c', '--count', 'Show total bookmark count and exit') do
-          @options[:count] = true
-        end
-
-        opts.on('-v', '--version', 'Show version') do
-          @options[:version] = true
-        end
-
-        opts.on('-h', '--help', 'Show this help') do
-          @options[:help] = true
-        end
-      end
-    end
 
     def execute
       return show_version if @options[:version]
@@ -109,10 +61,7 @@ module Bookmarker
       return show_count(db) if @options[:count]
       return list_folders(db) if @options[:list_folders]
 
-      bookmarks = resolve_bookmarks(db)
-      page_size = @options[:per_page] || Pager::DEFAULT_PAGE_SIZE
-      pager = Pager.new(bookmarks, page_size: page_size)
-      pager.interactive(input: stdin, output: stdout)
+      browse(db)
     end
 
     def show_version
@@ -120,7 +69,7 @@ module Bookmarker
     end
 
     def show_help
-      stdout.puts option_parser.to_s
+      stdout.puts @option_parser.help
     end
 
     def list_profiles
@@ -161,6 +110,13 @@ module Bookmarker
       else
         db.bookmarks
       end
+    end
+
+    def browse(db)
+      bookmarks = resolve_bookmarks(db)
+      page_size = @options[:per_page] || Pager::DEFAULT_PAGE_SIZE
+      pager = Pager.new(bookmarks, page_size: page_size)
+      pager.interactive(input: stdin, output: stdout)
     end
   end
 end
