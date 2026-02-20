@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
-require "simplecov"
+require 'simplecov'
 SimpleCov.start do
-  add_filter "/spec/"
+  add_filter '/spec/'
   enable_coverage :branch
   minimum_coverage line: 95, branch: 90
 end
 
-require "bookmarker"
-require "tmpdir"
-require "fileutils"
+require 'bookmarker'
+require 'tmpdir'
+require 'fileutils'
 
 module TestHelpers
   def create_test_database(bookmarks: default_bookmarks, extra_folders: [])
-    dir = Dir.mktmpdir("bookmarker_test")
-    db_path = File.join(dir, "places.sqlite")
+    dir = Dir.mktmpdir('bookmarker_test')
+    db_path = File.join(dir, 'places.sqlite')
     db = SQLite3::Database.new(db_path)
 
     db.execute <<~SQL
@@ -60,7 +60,7 @@ module TestHelpers
     # Insert any extra folders (for testing nested paths)
     extra_folders.each do |folder|
       db.execute(
-        "INSERT INTO moz_bookmarks (id, type, parent, position, title) VALUES (?, 2, ?, ?, ?)",
+        'INSERT INTO moz_bookmarks (id, type, parent, position, title) VALUES (?, 2, ?, ?, ?)',
         [folder[:id], folder[:parent], folder[:position] || 0, folder[:title]]
       )
     end
@@ -69,12 +69,12 @@ module TestHelpers
       place_id = i + 1
       bookmark_id = i + 100
       db.execute(
-        "INSERT INTO moz_places (id, url, title) VALUES (?, ?, ?)",
+        'INSERT INTO moz_places (id, url, title) VALUES (?, ?, ?)',
         [place_id, bm[:url], bm[:title]]
       )
       date = bm.key?(:date_added) ? bm[:date_added] : (1_700_000_000_000_000 - i * 1_000_000)
       db.execute(
-        "INSERT INTO moz_bookmarks (id, type, fk, parent, position, title, dateAdded) VALUES (?, 1, ?, ?, ?, ?, ?)",
+        'INSERT INTO moz_bookmarks (id, type, fk, parent, position, title, dateAdded) VALUES (?, 1, ?, ?, ?, ?, ?)',
         [bookmark_id, place_id, bm[:parent] || 2, i, bm[:title], date]
       )
     end

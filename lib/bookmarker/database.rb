@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require "sqlite3"
-require "fileutils"
-require "tempfile"
+require 'sqlite3'
+require 'fileutils'
+require 'tempfile'
 
 module Bookmarker
   # Reads Firefox bookmarks from a places.sqlite database.
@@ -121,7 +121,7 @@ module Bookmarker
     end
 
     def create_working_copy
-      tmp = Tempfile.new(["bookmarker", ".sqlite"])
+      tmp = Tempfile.new(['bookmarker', '.sqlite'])
       tmp_path = tmp.path
       tmp.close
       FileUtils.cp(@db_path, tmp_path)
@@ -129,14 +129,14 @@ module Bookmarker
     end
 
     def row_to_bookmark(row)
-      path_parts = parse_path(row["folder_path"])
+      path_parts = parse_path(row['folder_path'])
       Bookmark.new(
-        id: row["id"],
-        title: row["title"],
-        url: row["url"],
+        id: row['id'],
+        title: row['title'],
+        url: row['url'],
         folder: path_parts&.last,
         path: path_parts,
-        date_added: parse_timestamp(row["dateAdded"])
+        date_added: parse_timestamp(row['dateAdded'])
       )
     end
 
@@ -148,7 +148,7 @@ module Bookmarker
     def parse_path(path_str)
       return nil if path_str.nil? || path_str.empty?
 
-      parts = path_str.split("|").reject(&:empty?)
+      parts = path_str.split('|').reject(&:empty?)
       parts.empty? ? nil : parts
     end
 

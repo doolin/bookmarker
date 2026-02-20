@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "optparse"
+require 'optparse'
 
 module Bookmarker
   # Command-line interface for browsing Firefox bookmarks.
@@ -58,43 +58,43 @@ module Bookmarker
 
     def option_parser
       @option_parser ||= OptionParser.new do |opts|
-        opts.banner = "Usage: bookmarker [options]"
-        opts.separator ""
-        opts.separator "Options:"
+        opts.banner = 'Usage: bookmarker [options]'
+        opts.separator ''
+        opts.separator 'Options:'
 
-        opts.on("-d", "--database PATH", "Path to places.sqlite") do |path|
+        opts.on('-d', '--database PATH', 'Path to places.sqlite') do |path|
           @options[:database] = path
         end
 
-        opts.on("-s", "--search TERM", "Search bookmarks by title, URL, or folder") do |term|
+        opts.on('-s', '--search TERM', 'Search bookmarks by title, URL, or folder') do |term|
           @options[:search] = term
         end
 
-        opts.on("-f", "--folder NAME", "Show bookmarks in a specific folder") do |name|
+        opts.on('-f', '--folder NAME', 'Show bookmarks in a specific folder') do |name|
           @options[:folder] = name
         end
 
-        opts.on("--folders", "List all bookmark folders") do
+        opts.on('--folders', 'List all bookmark folders') do
           @options[:list_folders] = true
         end
 
-        opts.on("-n", "--per-page NUM", Integer, "Bookmarks per page (default: 25)") do |n|
+        opts.on('-n', '--per-page NUM', Integer, 'Bookmarks per page (default: 25)') do |n|
           @options[:per_page] = n
         end
 
-        opts.on("--profiles", "List available Firefox profiles with databases") do
+        opts.on('--profiles', 'List available Firefox profiles with databases') do
           @options[:list_profiles] = true
         end
 
-        opts.on("-c", "--count", "Show total bookmark count and exit") do
+        opts.on('-c', '--count', 'Show total bookmark count and exit') do
           @options[:count] = true
         end
 
-        opts.on("-v", "--version", "Show version") do
+        opts.on('-v', '--version', 'Show version') do
           @options[:version] = true
         end
 
-        opts.on("-h", "--help", "Show this help") do
+        opts.on('-h', '--help', 'Show this help') do
           @options[:help] = true
         end
       end
@@ -127,9 +127,9 @@ module Bookmarker
       finder = ProfileFinder.new
       dbs = finder.find_databases
       if dbs.empty?
-        stdout.puts "No Firefox profiles with bookmarks found."
+        stdout.puts 'No Firefox profiles with bookmarks found.'
       else
-        stdout.puts "Firefox bookmark databases:"
+        stdout.puts 'Firefox bookmark databases:'
         dbs.each { |path| stdout.puts "  #{path}" }
       end
     end
@@ -146,9 +146,9 @@ module Bookmarker
     def list_folders(db)
       folders = db.folders
       if folders.empty?
-        stdout.puts "No folders found."
+        stdout.puts 'No folders found.'
       else
-        stdout.puts "Bookmark folders:"
+        stdout.puts 'Bookmark folders:'
         folders.each { |f| stdout.puts "  #{f}" }
       end
     end

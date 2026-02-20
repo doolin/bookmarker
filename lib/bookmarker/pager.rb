@@ -85,7 +85,7 @@ module Bookmarker
 
     # @return [String] human-readable page status, e.g. "Showing 1-25 of 50 (page 1/2)"
     def page_status
-      return "No items" if items.empty?
+      return 'No items' if items.empty?
 
       first = current_page * page_size + 1
       last = [first + page_size - 1, items.size].min
@@ -96,7 +96,7 @@ module Bookmarker
     # @param output [IO] output stream (default $stdout)
     def render(output: $stdout)
       if items.empty?
-        output.puts "No bookmarks found."
+        output.puts 'No bookmarks found.'
         return
       end
 
@@ -128,9 +128,9 @@ module Bookmarker
 
     def navigation_prompt
       parts = []
-      parts << "[n]ext" if next_page?
-      parts << "[p]rev" if prev_page?
-      parts << "[q]uit"
+      parts << '[n]ext' if next_page?
+      parts << '[p]rev' if prev_page?
+      parts << '[q]uit'
       "#{parts.join(" | ")} > "
     end
 
@@ -139,17 +139,17 @@ module Bookmarker
       return false if line.nil?
 
       case line.strip.downcase
-      when "n", "next"
+      when 'n', 'next'
         unless next_page
-          output.puts "Already on last page."
+          output.puts 'Already on last page.'
         end
         true
-      when "p", "prev"
+      when 'p', 'prev'
         unless prev_page
-          output.puts "Already on first page."
+          output.puts 'Already on first page.'
         end
         true
-      when "q", "quit", "exit"
+      when 'q', 'quit', 'exit'
         false
       when /\A\d+\z/
         page_num = line.strip.to_i - 1
@@ -158,7 +158,7 @@ module Bookmarker
         end
         true
       else
-        output.puts "Unknown command. Use n/p/q or a page number."
+        output.puts 'Unknown command. Use n/p/q or a page number.'
         true
       end
     end

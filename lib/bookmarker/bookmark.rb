@@ -22,7 +22,7 @@ module Bookmarker
     # @param index [Integer] display position number
     # @return [String] numbered title, path, and indented URL for paged output
     def formatted(index)
-      display_title = title || "(untitled)"
+      display_title = title || '(untitled)'
       lines = ["#{index}. #{display_title}"]
       lines << "   [#{full_path}]" if path && path.size > 1
       lines << "   #{url}"
@@ -31,9 +31,9 @@ module Bookmarker
 
     # @return [String] folder hierarchy joined with " > ", or the folder name
     def full_path
-      return folder || "" unless path && !path.empty?
+      return folder || '' unless path && !path.empty?
 
-      path.join(" > ")
+      path.join(' > ')
     end
   end
 end

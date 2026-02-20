@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require_relative "bookmarker/version"
-require_relative "bookmarker/bookmark"
-require_relative "bookmarker/profile_finder"
-require_relative "bookmarker/database"
-require_relative "bookmarker/pager"
-require_relative "bookmarker/cli"
+require_relative 'bookmarker/version'
+require_relative 'bookmarker/bookmark'
+require_relative 'bookmarker/profile_finder'
+require_relative 'bookmarker/database'
+require_relative 'bookmarker/pager'
+require_relative 'bookmarker/cli'
 
 # Extract and browse Firefox bookmarks from the terminal.
 #

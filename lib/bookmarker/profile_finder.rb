@@ -15,13 +15,13 @@ module Bookmarker
   class ProfileFinder
     # Platform-specific Firefox profile root directories.
     FIREFOX_DIRS = {
-      "darwin" => File.join(Dir.home, "Library", "Application Support", "Firefox", "Profiles"),
-      "linux" => File.join(Dir.home, ".mozilla", "firefox"),
-      "windows" => File.join(ENV.fetch("APPDATA", ""), "Mozilla", "Firefox", "Profiles")
+      'darwin' => File.join(Dir.home, 'Library', 'Application Support', 'Firefox', 'Profiles'),
+      'linux' => File.join(Dir.home, '.mozilla', 'firefox'),
+      'windows' => File.join(ENV.fetch('APPDATA', ''), 'Mozilla', 'Firefox', 'Profiles')
     }.freeze
 
     # The SQLite database filename Firefox uses for bookmarks and history.
-    DB_NAME = "places.sqlite"
+    DB_NAME = 'places.sqlite'
 
     # @param platform [String] override platform detection ("darwin", "linux", "windows")
     def initialize(platform: detect_platform)
@@ -39,7 +39,7 @@ module Bookmarker
       dir = profiles_dir
       return [] unless Dir.exist?(dir)
 
-      Dir.glob(File.join(dir, "*", DB_NAME)).sort
+      Dir.glob(File.join(dir, '*', DB_NAME)).sort
     end
 
     # Returns the most likely default database, preferring the
@@ -51,17 +51,17 @@ module Bookmarker
       dbs = find_databases
       raise DatabaseNotFoundError, "No Firefox places.sqlite found in #{profiles_dir}" if dbs.empty?
 
-      dbs.find { |path| path.include?("default-release") } || dbs.first
+      dbs.find { |path| path.include?('default-release') } || dbs.first
     end
 
     private
 
     def detect_platform
-      case RbConfig::CONFIG["host_os"]
-      when /darwin/i then "darwin"
-      when /linux/i then "linux"
-      when /mswin|mingw|cygwin/i then "windows"
-      else "unknown"
+      case RbConfig::CONFIG['host_os']
+      when /darwin/i then 'darwin'
+      when /linux/i then 'linux'
+      when /mswin|mingw|cygwin/i then 'windows'
+      else 'unknown'
       end
     end
   end
