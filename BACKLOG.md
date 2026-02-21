@@ -43,13 +43,27 @@ query, with path available as an array on each bookmark.
 
 ### Export Formats
 
-- [ ] `--export html` — Netscape bookmark HTML format (compatible with browser import)
-- [ ] `--export markdown` — Markdown list grouped by folder
-- [ ] `--export csv` — CSV with columns: title, url, folder, path, date_added
-- [ ] `--export sql` — SQL INSERT statements for importing into another database
-- [ ] `--export json` — JSON array of bookmark objects
-- [ ] `--output FILE` — write export to a file instead of stdout
-- [ ] Add an `Exporter` base class with format-specific subclasses
+#### Architecture
+
+- [ ] Add `Exporter` base class (`lib/bookmarker/exporter.rb`) with `#export`
+      interface, injectable `bookmarks` and `output` stream, and a
+      `.for(format, ...)` factory method that resolves format name to subclass
+- [ ] Add `--export FORMAT` option to CLI; when present, skip pager and write
+      serialized bookmarks to stdout via the matching exporter
+- [ ] Add `--output FILE` option (only valid with `--export`); open file for
+      writing and pass as the exporter's output stream
+- [ ] Raise a clear error when `--output` is used without `--export`
+
+#### Formats (in implementation order)
+
+- [ ] `JsonExporter` — JSON array of bookmark objects (stdlib `json`, no deps)
+- [ ] `CsvExporter` — CSV with columns: title, url, folder, path, date_added
+      (stdlib `csv`)
+- [ ] `MarkdownExporter` — Markdown list grouped by folder
+- [ ] `HtmlExporter` — Netscape bookmark HTML format (DL/DT/DD nesting,
+      compatible with browser import in Firefox/Chrome/Safari)
+- [ ] `SqlExporter` — SQL INSERT statements; needs decisions on table schema,
+      identifier quoting, and dialect (default to SQLite-compatible)
 
 ### Interactive Paging
 
