@@ -5,7 +5,7 @@ Items are roughly prioritized within each section.
 
 ## Code Quality & Linting
 
-- [ ] Add RuboCop with a full `.rubocop.yml` — not ruby-standard, which is
+- [x] Add RuboCop with a full `.rubocop.yml` — not ruby-standard, which is
   emasculated to resemble JavaScript linting and removes everything remotely
   challenging about code quality (complexity, line length, method length). We
   go full RuboCop.
@@ -13,7 +13,7 @@ Items are roughly prioritized within each section.
 - [ ] Add Flog for complexity scoring (set a threshold, fail CI if exceeded)
 - [ ] Add Flay for structural duplication detection
 - [ ] Add Brakeman for security static analysis
-- [ ] Enforce frozen string literal and style consistency across all files
+- [x] Enforce frozen string literal and style consistency across all files
 - [ ] Add `rake quality` task that runs all code quality tools in one pass
 
 ## CI/CD
@@ -32,15 +32,13 @@ Items are roughly prioritized within each section.
 
 > **ADR:** [0005-recursive-cte-for-full-bookmark-path](doc/adr/0005-recursive-cte-for-full-bookmark-path.md)
 
-Currently only the immediate parent folder is captured. Firefox bookmarks
-can be nested arbitrarily deep (e.g. `menu > Bookmarks Toolbar > EstimationRestart`).
-Real data shows max depth of 5. The recursive CTE approach has been validated
-against the live database.
+Recursive CTE implemented — full folder hierarchy is resolved in a single
+query, with path available as an array on each bookmark.
 
-- [ ] Walk the `moz_bookmarks` parent chain via recursive CTE to build full path
-- [ ] Add `Bookmark#path` returning the full folder hierarchy as an array
-- [ ] Display full path in terminal output (e.g. `[menu > WebDev > Ruby]`)
-- [ ] Support `--folder` filtering at any level of the path
+- [x] Walk the `moz_bookmarks` parent chain via recursive CTE to build full path
+- [x] Add `Bookmark#path` returning the full folder hierarchy as an array
+- [x] Display full path in terminal output (e.g. `[menu > WebDev > Ruby]`)
+- [x] Support `--folder` filtering at any level of the path
 - [ ] Add `--tree` flag to display bookmarks in a nested tree structure
 
 ### Export Formats
@@ -55,10 +53,10 @@ against the live database.
 
 ### Interactive Paging
 
-The current pager requires pressing Enter after each command.
+Single-keystroke navigation implemented via `io/console`.
 
-- [ ] Raw terminal mode (single-keystroke navigation without Enter)
-- [ ] Use `io/console` for raw mode with graceful fallback to current line mode
+- [x] Raw terminal mode (single-keystroke navigation without Enter)
+- [x] Use `io/console` for raw mode with graceful fallback to current line mode
 - [ ] Arrow key support (up/down for prev/next page)
 - [ ] `/` to enter search-within-results mode (like less)
 - [ ] `o` to open the selected bookmark URL in the default browser
@@ -76,10 +74,10 @@ The current pager requires pressing Enter after each command.
 
 ### Display
 
-- [ ] Colorized terminal output (title, URL, folder in different colors)
+- [x] Colorized terminal output (title, URL, folder in different colors)
 - [ ] `--format compact` — single-line per bookmark (title + truncated URL)
 - [ ] `--format wide` — include date added and visit count
-- [ ] Respect `NO_COLOR` environment variable
+- [x] Respect `NO_COLOR` environment variable
 - [ ] Configurable column widths based on terminal size
 
 ## Architecture & Tech Debt
