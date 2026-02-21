@@ -53,6 +53,10 @@ query, with path available as an array on each bookmark.
 - [ ] Add `--output FILE` option (only valid with `--export`); open file for
       writing and pass as the exporter's output stream
 - [ ] Raise a clear error when `--output` is used without `--export`
+- [ ] Revisit `--output FILE`, `--export FORMAT`, and `--no-color` interaction:
+      file output should probably disable color automatically; `--export` to
+      stdout may or may not want color (e.g. markdown vs json); decide whether
+      `--no-color` is redundant when writing to a file or a non-TTY
 
 #### Formats (in implementation order)
 

@@ -63,7 +63,7 @@ module Bookmarker
       return show_count(db) if @options[:count]
       return list_folders(db) if @options[:list_folders]
 
-      browse(db)
+      export(db)
     end
 
     def show_version
@@ -114,11 +114,13 @@ module Bookmarker
       end
     end
 
-    def browse(db)
+    def export(db)
       bookmarks = resolve_bookmarks(db)
-      page_size = @options[:per_page] || Pager::DEFAULT_PAGE_SIZE
-      pager = Pager.new(bookmarks, page_size: page_size)
-      pager.interactive(input: stdin, output: stdout)
+      format = @options[:export] || :stdout
+      exporter = Exporter.for(format, bookmarks,
+                              output: stdout, input: stdin,
+                              page_size: @options[:per_page])
+      exporter.export
     end
   end
 end
