@@ -154,6 +154,33 @@ Single-keystroke navigation implemented via `io/console`.
 - [ ] Snapshot history — save timestamped copies of `places.sqlite` so users
       can diff their bookmarks over time
 
+## Web Application
+
+A legitimate use case is embedding bookmarker in a personal server running
+on localhost — a web UI for browsing, searching, and managing Firefox
+bookmarks without the terminal. The core data layer (`Database`, `Bookmark`,
+`ProfileFinder`) is already library-friendly; the gaps are around
+serialization, pagination, and configuration.
+
+- [ ] `Bookmark#as_json` — return a hash with `date_added` as ISO 8601 string,
+      ready for `JSON.generate` or Rails `render json:`
+- [ ] `Exporter#to_s` — convenience method that exports to a `StringIO` and
+      returns the string; keeps `#export` for streaming, adds `#to_s` for
+      request/response contexts
+- [ ] `Database` query refinements — `#bookmarks(limit:, offset:)` for
+      API-style pagination, `#bookmarks(sort:)` for sort order; push filtering
+      into the SQL query layer instead of Ruby-side `#select`
+- [ ] Facade module — `Bookmarker.bookmarks(database:, search:, folder:,
+      limit:, offset:)` that wires up internals without requiring the caller
+      to assemble `ProfileFinder` + `Database` + `Exporter` manually
+- [ ] `Bookmarker.configure` block — set default database path, format
+      preferences, and other library-level defaults (also useful for CLI)
+- [ ] Thread safety audit — `@bookmarks ||=` memoization in `Database` is
+      fine for single-threaded use but needs review for concurrent access
+      under Puma or similar threaded servers
+- [ ] Ensure `Color` module is never invoked from web code paths; consider
+      making color a concern of terminal exporters only, not `Bookmark`
+
 ## Documentation
 
 - [ ] Generate and host YARD docs (GitHub Pages or rubydoc.info)
