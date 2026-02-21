@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'exporter/stdout'
+require_relative 'exporter/json'
 
 module Bookmarker
   # Base class for bookmark exporters.
@@ -16,7 +17,8 @@ module Bookmarker
   #   exporter.export
   class Exporter
     FORMATS = {
-      stdout: Exporter::Stdout
+      stdout: Exporter::Stdout,
+      json: Exporter::Json
     }.freeze
 
     # @return [Array<Bookmark>] bookmarks to export

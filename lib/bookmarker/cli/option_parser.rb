@@ -47,6 +47,7 @@ module Bookmarker
           opts.on('-n', '--per-page NUM', Integer, 'Bookmarks per page (default: 25)') { |n| options[:per_page] = n }
           opts.on('--profiles', 'List available Firefox profiles with databases') { options[:list_profiles] = true }
           opts.on('-c', '--count', 'Show total bookmark count and exit') { options[:count] = true }
+          opts.on('-e', '--export FORMAT', 'Export bookmarks (json)') { |f| options[:export] = f }
           opts.on('-v', '--version', 'Show version') { options[:version] = true }
           opts.on('--no-color', 'Disable colored output') { options[:no_color] = true }
           opts.on('-h', '--help', 'Show this help') { options[:help] = true }
