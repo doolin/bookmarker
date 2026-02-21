@@ -79,7 +79,11 @@ Single-keystroke navigation implemented via `io/console`.
 - [ ] `/` to enter search-within-results mode (like less)
 - [ ] `o` to open the selected bookmark URL in the default browser
 - [ ] Number keys to select a specific bookmark, not just page
+- [ ] Probe terminal height via `IO#winsize` (or `io/console`) to compute
+      page size automatically; fall back to `DEFAULT_PAGE_SIZE` when the probe
+      fails (e.g. piped output, non-TTY, or `NoMethodError`)
 - [ ] Resize-aware: detect terminal width/height and adjust page size
+      dynamically on `SIGWINCH`
 
 ### Search & Filtering
 
@@ -89,6 +93,16 @@ Single-keystroke navigation implemented via `io/console`.
 - [ ] `--tags` support (Firefox tags are stored in `moz_bookmarks` type=2)
 - [ ] Fuzzy search (Levenshtein or similar)
 - [ ] `--duplicates` — find bookmarks with the same URL
+- [ ] `--group-by domain` — cluster bookmarks by hostname instead of folder
+
+### Data & Analysis
+
+- [ ] `--stats` — summary dashboard: total bookmarks, bookmarks per folder,
+      oldest/newest, most common domains, average folder depth
+- [ ] `--dead-links` — HTTP HEAD check against each URL, report 404s and
+      timeouts (useful for cleaning up stale bookmarks accumulated over years)
+- [ ] `--validate` — check for orphan bookmarks (no parent), broken internal
+      references, empty folders, or duplicate folder names at the same level
 
 ### Display
 
@@ -97,6 +111,31 @@ Single-keystroke navigation implemented via `io/console`.
 - [ ] `--format wide` — include date added and visit count
 - [x] Respect `NO_COLOR` environment variable
 - [ ] Configurable column widths based on terminal size
+
+### Interactivity
+
+- [ ] Bookmark preview — press `i` in the pager to show metadata (date added,
+      visit count, full path) in a detail pane before returning to the list
+- [ ] `--pick` — interactive multi-select mode (checkbox-style) that outputs
+      selected bookmarks to stdout; composable with `--export` for piping a
+      curated subset
+
+### Multi-Profile
+
+- [ ] `--diff PROFILE_A PROFILE_B` — show bookmarks unique to each profile,
+      or common to both (useful for migrating or merging profiles)
+- [ ] `--merge` — combine bookmarks from multiple profiles into a single
+      deduplicated output
+
+### Integration
+
+- [ ] Shell completions — generate Bash/Zsh/Fish completions for flags and
+      folder names; `--folder` could complete against actual folder names
+      from the database
+- [ ] `--pipe` — output bare URLs one per line, designed for piping into
+      `xargs`, `curl`, `wget`, etc. (simpler than `--export json | jq`)
+- [ ] RC file — `~/.bookmarkerrc` (YAML or TOML) for default database path,
+      preferred export format, page size, color preferences
 
 ## Architecture & Tech Debt
 
@@ -108,6 +147,12 @@ Single-keystroke navigation implemented via `io/console`.
 - [ ] Support Safari bookmarks (plist-based)
 - [ ] Add a `Bookmarker.configure` block for library-level defaults
 - [ ] Ship a `man` page generated from the README or a ronn source file
+- [ ] Structured logging — `--verbose` / `--debug` flag with leveled logging
+      (profile discovery, DB copy timing, query duration) for troubleshooting
+- [ ] `bookmarker init` — interactive first-run wizard that detects profiles,
+      lets you pick a default, and writes `~/.bookmarkerrc`
+- [ ] Snapshot history — save timestamped copies of `places.sqlite` so users
+      can diff their bookmarks over time
 
 ## Documentation
 

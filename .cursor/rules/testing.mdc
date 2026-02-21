@@ -1,0 +1,8 @@
+---
+description: Permissions for running test and lint tools
+alwaysApply: true
+---
+
+# Testing & Linting
+
+Always run `bundle exec rspec` and `bundle exec rubocop` with `required_permissions: ["all"]` to avoid sandbox restrictions on cache directories and home directory writes.
