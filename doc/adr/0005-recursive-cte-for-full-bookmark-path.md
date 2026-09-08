@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted (upcoming feature — see BACKLOG.md)
+Accepted (upcoming feature — see `.development/backlog.md`)
 
 ## Context
 
