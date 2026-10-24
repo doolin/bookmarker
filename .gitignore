@@ -3,7 +3,6 @@
 /pkg/
 /tmp/
 *.gem
-Gemfile.lock
 .ruby-lsp/
 .claude/settings.local.json
 .DS_Store
